@@ -1,21 +1,21 @@
 @charset "UTF-8";
 @font-face {
-  font-family: "Red Hat Text", sans-serif;
-  src: url("../../fonts/static/RedHatText-Regular.ttf") format("ttf");
+  font-family: "Red Hat Text";
+  src: url("../../fonts/static/RedHatText-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: "Red Hat Text", sans-serif;
-  src: url("../../fonts/static/RedHatText-SemiBold.ttf") format("ttf");
+  font-family: "Red Hat Text";
+  src: url("../../fonts/static/RedHatText-SemiBold.ttf") format("truetype");
   font-weight: 600;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: "Red Hat Text", sans-serif;
-  src: url("../../fonts/static/RedHatText-Bold.ttf") format("ttf");
+  font-family: "Red Hat Text";
+  src: url("../../fonts/static/RedHatText-Bold.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -178,7 +178,7 @@ body {
   font-weight: 400;
   line-height: 1.28;
   color: var(--color-dark);
-  background-color: var(--color-light);
+  background-color: var(--color-bg);
 }
 
 img {
@@ -226,14 +226,17 @@ h4,
 }
 
 :root {
-  --color-dark: #292a32;
   --color-gray: #898989;
+  --color-dark: hsl(14, 65%, 9%);
   --color-light: #ffffff;
   --color-accent: hsl(12, 20%, 44%);
+  --color-accent_2: hsl(7, 20%, 60%);
+  --color-accent-light: hsl(11, 73%, 47%);
+  --color-bg: hsl(20, 50%, 98%);
   --border-radius: 14px;
   --font-family-base: "Red Hat Text", sans-serif;
   --container-width: 1440px;
-  --container-padding-x: 20px;
+  --container-padding-x: 50px;
   --input-height: 60px;
   --button-height: 70px;
   --button-padding-x: 35px;
@@ -300,26 +303,72 @@ h4,
 .desserts__title {
   margin-bottom: 20px;
   display: inline-block;
+  font-weight: 700;
+  font-size: 40px;
+  color: var(--color-dark);
 }
 
 .cart {
-  --max-width: 350px;
   display: flex;
   flex-direction: column;
   justify-self: flex-end;
   width: 100%;
-  max-width: var(--max-width);
+  max-width: clamp(250px, 350 / 1440 * 100vw, 350px);
   position: absolute;
-  right: calc((100vw - var(--container-width)) / 2);
+  right: var(--container-padding-x);
+  background-color: white;
+  border-radius: var(--border-radius);
+  padding-inline: 30px;
+  padding-block: 40px;
 }
 .cart__title {
-  margin-bottom: 30px;
+  margin-bottom: 25px;
+  color: var(--color-accent-light);
+  font-weight: 700;
+  font-size: 22px;
+}
+.cart__list-item {
+  color: var(--color-accent);
+  text-align: center;
+  font-size: 14px;
+}
+.cart__list-item-image {
+  display: block;
+  justify-self: center;
 }
 
 .dessert__list {
   display: grid;
-  grid-template-columns: repeat(3, 300px);
+  grid-template-columns: repeat(3, clamp(150px, 300 / 1600 * 100vw, 300px));
   width: -moz-fit-content;
   width: fit-content;
   gap: 30px;
+}
+.dessert__list-item-wrapper {
+  position: relative;
+}
+.dessert__list-item-info {
+  display: flex;
+  flex-direction: column;
+  margin-top: 50px;
+  row-gap: 3px;
+}
+.dessert__list-item-shortName {
+  color: var(--color-accent_2);
+  font-weight: 400;
+  font-size: 14px;
+}
+.dessert__list-item-name {
+  font-weight: 600;
+}
+.dessert__list-item-price {
+  font-weight: 600;
+  color: var(--color-accent-light);
+}
+.dessert__list-item-buy {
+  position: absolute;
+  left: 50%;
+  bottom: -5%;
+  translate: -50%;
+  z-index: 1;
 }/*# sourceMappingURL=styles.css.map */

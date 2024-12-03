@@ -1,6 +1,42 @@
 .dessert__list {
-    display: grid;
-    grid-template-columns: repeat(3, 300px);
-    width: fit-content;
-    gap: 30px;
+  display: grid;
+  grid-template-columns: repeat(3, fluid-common(150, 300, 1600));
+  width: fit-content;
+  gap: 30px;
+
+  &-item {
+    &-wrapper {
+      position: relative;
+    }
+    
+    &-info {
+      display: flex;
+      flex-direction: column;
+      margin-top: 50px;
+      row-gap: 3px;
+    }
+
+    &-shortName {
+      color: var(--color-accent_2);
+      font-weight: 400;
+      font-size: 14px;
+    }
+
+    &-name {
+      font-weight: 600;
+    }
+
+    &-price {
+      font-weight: 600;
+      color: var(--color-accent-light);
+    }
+
+    &-buy {
+        position: absolute;
+        left: 50%;
+        bottom: -5%;
+        translate: -50%;
+        z-index: 1;
+    }
+  }
 }
