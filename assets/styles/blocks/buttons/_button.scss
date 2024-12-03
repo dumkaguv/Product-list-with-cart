@@ -1,0 +1,23 @@
+.button {
+  @include reset-button();
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: var(--button-font-size);
+  font-weight: 600;
+  text-wrap: nowrap;
+
+  background-color: var(--color-light);
+  border-radius: 30px;
+  border: 1px solid var(--color-accent);
+  padding-inline: var(--button-padding-x);
+  height: var(--button-height);
+
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--color-accent-light);
+  }
+}

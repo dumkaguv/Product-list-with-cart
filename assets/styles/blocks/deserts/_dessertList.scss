@@ -8,11 +8,15 @@
     &-wrapper {
       position: relative;
     }
-    
+
+    &-image {
+      border-radius: var(--border-radius);
+    }
+
     &-info {
       display: flex;
       flex-direction: column;
-      margin-top: 50px;
+      margin-top: 35px;
       row-gap: 3px;
     }
 
@@ -32,11 +36,11 @@
     }
 
     &-buy {
-        position: absolute;
-        left: 50%;
-        bottom: -5%;
-        translate: -50%;
-        z-index: 1;
+      position: absolute;
+      left: 50%;
+      bottom: -7%;
+      translate: -50%;
+      z-index: 1;
     }
   }
 }

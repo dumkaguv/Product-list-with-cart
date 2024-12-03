@@ -237,10 +237,9 @@ h4,
   --font-family-base: "Red Hat Text", sans-serif;
   --container-width: 1440px;
   --container-padding-x: 50px;
-  --input-height: 60px;
-  --button-height: 70px;
-  --button-padding-x: 35px;
-  --button-font-size: 20px;
+  --button-height: 45px;
+  --button-padding-x: 45px;
+  --button-font-size: 16px;
   --transition-duration: 0.2s;
   /* Variables for mixins, functions */
   --desktop-large: 1920;
@@ -297,6 +296,27 @@ h4,
   }
 }
 
+.button {
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--button-font-size);
+  font-weight: 600;
+  text-wrap: nowrap;
+  background-color: var(--color-light);
+  border-radius: 30px;
+  border: 1px solid var(--color-accent);
+  padding-inline: var(--button-padding-x);
+  height: var(--button-height);
+  cursor: pointer;
+}
+.button:hover {
+  background-color: var(--color-accent-light);
+}
+
 .desserts {
   margin-top: 100px;
 }
@@ -347,10 +367,13 @@ h4,
 .dessert__list-item-wrapper {
   position: relative;
 }
+.dessert__list-item-image {
+  border-radius: var(--border-radius);
+}
 .dessert__list-item-info {
   display: flex;
   flex-direction: column;
-  margin-top: 50px;
+  margin-top: 35px;
   row-gap: 3px;
 }
 .dessert__list-item-shortName {
@@ -368,7 +391,7 @@ h4,
 .dessert__list-item-buy {
   position: absolute;
   left: 50%;
-  bottom: -5%;
+  bottom: -7%;
   translate: -50%;
   z-index: 1;
 }/*# sourceMappingURL=styles.css.map */
