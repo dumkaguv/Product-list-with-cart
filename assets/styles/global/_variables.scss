@@ -1,0 +1,32 @@
+:root {
+  --color-dark: #292a32;
+  --color-gray: #898989;
+  --color-light: #ffffff;
+  --color-accent: hsl(12, 20%, 44%);
+
+  --border-radius: 14px;
+
+  --font-family-base: "Red Hat Text", sans-serif;
+
+  --container-width: 1440px;
+  --container-padding-x: 20px;
+
+  --input-height: 60px;
+  --button-height: 70px;
+  --button-padding-x: 35px;
+  --button-font-size: 20px;
+
+  --transition-duration: 0.2s;
+
+  /* Variables for mixins, functions */
+  --desktop-large: 1920;
+  --default-width: 1440;
+  --desktop-above: 1281;
+  --desktop: 1280;
+
+  --tablet-above: 1024;
+  --tablet: 1023;
+
+  --mobile-above: 768;
+  --mobile: 767;
+}
