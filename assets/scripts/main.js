@@ -7,3 +7,4 @@ const screenController = new ScreenController(menu);
 menu.addItems().then(() => {
   screenController.renderMenu();
 });
+screenController.init();

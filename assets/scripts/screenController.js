@@ -1,64 +1,67 @@
 export class ScreenController {
   constructor(menu) {
     this.menu = menu;
+    this.initialButtonContentHTML = "";
+  }
+
+  init() {
     this.initEvents();
   }
 
   initEvents() {
     const menuListUl = document.querySelector(".dessert__list");
-    const addToCartButtonClass = "dessert__list-item-buy";
-    let initialButtonContentHTML = "";
 
     menuListUl.addEventListener(
       "mouseenter",
-      (event) => toggleButtonContent(event, "mouseenter"),
+      (event) => this.toggleButtonContent(event, "mouseenter"),
       true
     );
-
+    
     menuListUl.addEventListener(
       "mouseleave",
-      (event) => toggleButtonContent(event, "mouseleave"),
+      (event) => this.toggleButtonContent(event, "mouseleave"),
       true
     );
+  }
 
-    function toggleButtonContent(event, action) {
-      const cartButton = event?.target;
+  toggleButtonContent(event, action) {
+    const cartButton = event?.target;
 
-      if (!cartButton?.classList?.contains(addToCartButtonClass)) {
-        return;
-      }
-
-      if (action === "mouseenter") {
-        if (!initialButtonContentHTML) {
-          initialButtonContentHTML = cartButton.innerHTML;
-        }
-
-        cartButton.innerHTML = changeButtonContent_OnMouseOver(cartButton);
-        cartButton.style.justifyContent = "space-between";
-        cartButton.style.color = "white";
-
-        function changeButtonContent_OnMouseOver() {
-          return `
-          <img
-            src="./assets/images/icon-decrement-quantity.svg"
-            alt="add to cart icon"
-            class="decrement-quantity"
-          />
-          1
-          <img
-            src="./assets/images/icon-increment-quantity.svg"
-            alt="remove from cart icon"
-            class="increment-quantity"
-          />`;
-        }
-      }
-
-      if (action === "mouseleave") {
-        cartButton.innerHTML = initialButtonContentHTML;
-        cartButton.style.justifyContent = "center";
-        cartButton.style.color = "black";
-      }
+    if (!cartButton?.classList?.contains("dessert__list-item-buy")) {
+      return;
     }
+
+    if (action === "mouseenter") {
+      this.handleMouseEnter(cartButton);
+    }
+
+    if (action === "mouseleave") {
+      this.handleMouseLeave(cartButton);
+    }
+  }
+
+  handleMouseEnter(cartButton) {
+    if (!this.initialButtonContentHTML) {
+      this.initialButtonContentHTML = cartButton.innerHTML;
+    }
+
+    cartButton.innerHTML = this.changeButtonContentOnMouseOver();
+    cartButton.style.justifyContent = "space-between";
+    cartButton.style.color = "white";
+  }
+
+  handleMouseLeave(cartButton) {
+    cartButton.innerHTML = this.initialButtonContentHTML;
+    cartButton.style.justifyContent = "center";
+    cartButton.style.color = "black";
+  }
+
+  changeButtonContentOnMouseOver() {
+    return `
+      <img src="./assets/images/icon-decrement-quantity.svg" alt="add to cart icon" class="decrement-quantity" />
+      1
+      <img src="./assets/images/icon-increment-quantity.svg" alt="remove from cart icon" class="increment-quantity" />
+    `;
   }
 
   renderMenu() {
@@ -89,28 +92,20 @@ export class ScreenController {
 
   getItemTemplate(category, name, price, pathToImage) {
     return `
-    <li class="dessert__list-item">
-      <div class="dessert__list-item-wrapper">
-        <img
-          class="dessert__list-item-image"
-          src="${pathToImage}"
-          alt="${name}"
-          loading="lazy"
-        />
-        <button class="dessert__list-item-buy button button-to-cart">
-          <img
-            src="./assets/images/icon-add-to-cart.svg"
-            alt="add to cart icon"
-          />
-          Add to Cart
-        </button>
-      </div>
-      <div class="dessert__list-item-info">
-        <div class="dessert__list-item-category">${category}</div>
-        <div class="dessert__list-item-name">${name}</div>
-        <div class="dessert__list-item-price">$${price}</div>
-      </div>
-    </li>
+      <li class="dessert__list-item">
+        <div class="dessert__list-item-wrapper">
+          <img class="dessert__list-item-image" src="${pathToImage}" alt="${name}" loading="lazy" />
+          <button class="dessert__list-item-buy button button-to-cart">
+            <img src="./assets/images/icon-add-to-cart.svg" alt="add to cart icon" />
+            Add to Cart
+          </button>
+        </div>
+        <div class="dessert__list-item-info">
+          <div class="dessert__list-item-category">${category}</div>
+          <div class="dessert__list-item-name">${name}</div>
+          <div class="dessert__list-item-price">$${price}</div>
+        </div>
+      </li>
     `;
   }
 }
