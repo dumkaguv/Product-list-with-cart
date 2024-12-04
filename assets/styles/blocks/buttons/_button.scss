@@ -2,12 +2,14 @@
   @include reset-button();
 
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  flex: 1;
 
   font-size: var(--button-font-size);
   font-weight: 600;
   text-wrap: nowrap;
+  width: 160px;
 
   background-color: var(--color-light);
   border-radius: 30px;
@@ -17,7 +19,7 @@
 
   cursor: pointer;
 
-  &:hover {
+  @include hover {
     background-color: var(--color-accent-light);
   }
 }

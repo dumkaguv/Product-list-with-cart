@@ -238,7 +238,7 @@ h4,
   --container-width: 1440px;
   --container-padding-x: 50px;
   --button-height: 45px;
-  --button-padding-x: 45px;
+  --button-padding-x: 15px;
   --button-font-size: 16px;
   --transition-duration: 0.2s;
   /* Variables for mixins, functions */
@@ -301,11 +301,13 @@ h4,
   background-color: transparent;
   border: none;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  flex: 1;
   font-size: var(--button-font-size);
   font-weight: 600;
   text-wrap: nowrap;
+  width: 160px;
   background-color: var(--color-light);
   border-radius: 30px;
   border: 1px solid var(--color-accent);
@@ -313,8 +315,29 @@ h4,
   height: var(--button-height);
   cursor: pointer;
 }
-.button:hover {
-  background-color: var(--color-accent-light);
+@media (hover: hover) {
+  .button:hover {
+    background-color: var(--color-accent-light);
+  }
+}
+@media (hover: none) {
+  .button:active {
+    background-color: var(--color-accent-light);
+  }
+}
+
+.increment-quantity {
+  border: 2px solid var(--color-light);
+  border-radius: 50%;
+  padding: 3px;
+  aspect-ratio: 1;
+}
+
+.decrement-quantity {
+  border: 2px solid var(--color-light);
+  border-radius: 50%;
+  padding: 3px;
+  aspect-ratio: 1;
 }
 
 .desserts {
@@ -376,7 +399,7 @@ h4,
   margin-top: 35px;
   row-gap: 3px;
 }
-.dessert__list-item-shortName {
+.dessert__list-item-category {
   color: var(--color-accent_2);
   font-weight: 400;
   font-size: 14px;

@@ -1,6 +1,64 @@
 export class ScreenController {
   constructor(menu) {
     this.menu = menu;
+    this.initEvents();
+  }
+
+  initEvents() {
+    const menuListUl = document.querySelector(".dessert__list");
+    const addToCartButtonClass = "dessert__list-item-buy";
+    let initialButtonContentHTML = "";
+
+    menuListUl.addEventListener(
+      "mouseenter",
+      (event) => toggleButtonContent(event, "mouseenter"),
+      true
+    );
+
+    menuListUl.addEventListener(
+      "mouseleave",
+      (event) => toggleButtonContent(event, "mouseleave"),
+      true
+    );
+
+    function toggleButtonContent(event, action) {
+      const cartButton = event?.target;
+
+      if (!cartButton?.classList?.contains(addToCartButtonClass)) {
+        return;
+      }
+
+      if (action === "mouseenter") {
+        if (!initialButtonContentHTML) {
+          initialButtonContentHTML = cartButton.innerHTML;
+        }
+
+        cartButton.innerHTML = changeButtonContent_OnMouseOver(cartButton);
+        cartButton.style.justifyContent = "space-between";
+        cartButton.style.color = "white";
+
+        function changeButtonContent_OnMouseOver() {
+          return `
+          <img
+            src="./assets/images/icon-decrement-quantity.svg"
+            alt="add to cart icon"
+            class="decrement-quantity"
+          />
+          1
+          <img
+            src="./assets/images/icon-increment-quantity.svg"
+            alt="remove from cart icon"
+            class="increment-quantity"
+          />`;
+        }
+      }
+
+      if (action === "mouseleave") {
+        cartButton.innerHTML = initialButtonContentHTML;
+        cartButton.style.justifyContent = "center";
+        cartButton.style.color = "black";
+      }
+    }
   }
 
   renderMenu() {
@@ -25,7 +83,7 @@ export class ScreenController {
 
       documentFragment.appendChild(tempDiv.firstElementChild);
     });
-    
+
     menuList.appendChild(documentFragment);
   }
 
