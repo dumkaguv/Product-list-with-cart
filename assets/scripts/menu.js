@@ -5,7 +5,8 @@ export class Menu {
 
   addItems() {
     return this.getItems().then((data) => {
-      data.forEach((item) => {
+      data.forEach((item, index) => {
+        item.index = index;
         this.items.push(item);
       });
     });

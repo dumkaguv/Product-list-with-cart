@@ -69,7 +69,6 @@ export class ScreenController {
     const currentQuantity =
       cartButton?.querySelector(".current-quantity")?.textContent || 0;
     const itemImage = cartButton?.previousElementSibling;
-    console.log(itemImage);
 
     cartButton.innerHTML =
       this.changeButtonContentOnMouseOver(currentQuantity);
@@ -104,7 +103,7 @@ export class ScreenController {
 
   handleMouseClick(event) {
     const buttonQuantity = event?.target;
-    const itemId = buttonQuantity?.parentElement?.dataset?.itemId;
+    const itemId = +buttonQuantity?.parentElement?.dataset?.itemId;
     const currentQuantityDiv =
       buttonQuantity?.parentElement?.querySelector(".current-quantity");
     const currentItem = this.menu.getItems()[itemId];
@@ -113,12 +112,10 @@ export class ScreenController {
       this.cart.changeQuantity(currentItem, +1);
       this.renderCurrentQuantity(currentQuantityDiv, currentItem);
       this.renderCart();
-      console.log(this.cart.getItemsInCart());
     } else if (buttonQuantity?.classList?.contains("decrement-quantity")) {
       this.cart.changeQuantity(currentItem, -1);
       this.renderCurrentQuantity(currentQuantityDiv, currentItem);
       this.renderCart();
-      console.log(this.cart.getItemsInCart());
     }
   }
 
@@ -188,17 +185,59 @@ export class ScreenController {
       this.initialCartContentHTML = cartList.innerHTML;
     }
 
+    const browserIndexesSet = new Set();
+    const actualIndexesSet = new Set();
+    const items = this.cart.getItemsInCart();
+    const itemsLi = cartList.querySelectorAll(".cart__list-item");
+
     if (this.cart.isCartEmpty()) {
       cartList.innerHTML = this.initialCartContentHTML;
     } else if (!this.cart.isCartEmpty()) {
-      if (this.cart.totalItems === 1) {
-        cartList.innerHTML = "";
+      cartList?.querySelector(".cart__list-item-empty")?.remove();
+
+      for (const [item, quantity] of items) {
+        const { category, image, index, name, price } = item;
+        actualIndexesSet.add(index);
+        if (quantity === 1 && !this.isAlreadyInCart(itemsLi, index)) {
+          cartList.insertAdjacentHTML(
+            "beforeend",
+            this.getItemCartTemplate(
+              name,
+              quantity,
+              price.toFixed(2),
+              (quantity * price).toFixed(2),
+              index
+            )
+          );
+          browserIndexesSet.add(index);
+        } else {
+          for (const itemLi of itemsLi) {
+            const browserIndex = parseInt(itemLi.dataset.id);
+            if (!browserIndexesSet.has(browserIndex)) {
+              browserIndexesSet.add(browserIndex);
+            }
+            if (browserIndex === index && quantity > 0) {
+              // change quantity
+              itemLi.querySelector(
+                ".cart__list-item-quantity"
+              ).textContent = `${items.get(item)}x`;
+              // change price
+              itemLi.querySelector(
+                ".cart__list-item-totalPrice"
+              ).textContent = `$${(price * quantity).toFixed(2)}`;
+            }
+          }
+        }
       }
-
-      cartList.insertAdjacentHTML("beforeend", this.getItemCartTemplate());
     }
-
-    console.log(this.initialCartContentHTML);
+    if (browserIndexesSet.size !== actualIndexesSet.size) {
+      for (const itemLi of itemsLi) {
+        const browserIndex = parseInt(itemLi.dataset.id);
+        if (!actualIndexesSet.has(browserIndex)) {
+          itemLi.remove();
+        }
+      }
+    }
   }
 
   renderTotalItemsInCart(cartDiv) {
@@ -206,9 +245,18 @@ export class ScreenController {
     countDiv.innerHTML = `Your Cart (${this.cart.getTotalItemsInCart()})`;
   }
 
-  getItemCartTemplate(name, quantity, price, totalPrice) {
+  isAlreadyInCart(itemsLi, index) {
+    for (const itemLi of itemsLi) {
+      if (parseInt(itemLi?.dataset?.id) === index) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  getItemCartTemplate(name, quantity, price, totalPrice, index) {
     return `
-      <li class="cart__list-item">
+      <li class="cart__list-item" data-id="${index}">
         <div class="cart__list-item-title">${name}</div>
         <div class="cart__list-item-info">
           <div class="cart__list-item-quantity">${quantity}x</div>
