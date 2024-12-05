@@ -13,24 +13,13 @@
 
   background-color: white;
   border-radius: var(--border-radius);
-  padding-inline: 30px;
-  padding-block: 40px;
+  padding-inline: 20px;
+  padding-block: 25px;
 
   &__title {
     margin-bottom: 25px;
     color: var(--color-accent-light);
     font-weight: 700;
     font-size: 22px;
-  }
-
-  &__list-item {
-    color: var(--color-accent);
-    text-align: center;
-    font-size: 14px;
-
-    &-image {
-      display: block;
-      justify-self: center;
-    }
   }
 }

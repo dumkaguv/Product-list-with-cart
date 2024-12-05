@@ -361,8 +361,8 @@ h4,
   right: var(--container-padding-x);
   background-color: white;
   border-radius: var(--border-radius);
-  padding-inline: 30px;
-  padding-block: 40px;
+  padding-inline: 20px;
+  padding-block: 25px;
 }
 .cart__title {
   margin-bottom: 25px;
@@ -370,14 +370,114 @@ h4,
   font-weight: 700;
   font-size: 22px;
 }
+
 .cart__list-item {
   color: var(--color-accent);
-  text-align: center;
   font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
 }
-.cart__list-item-image {
-  display: block;
-  justify-self: center;
+.cart__list-item-title {
+  font-size: 14px;
+  color: black;
+  font-weight: 700;
+}
+.cart__list-item-info {
+  display: flex;
+  width: 100%;
+  -moz-column-gap: 12px;
+       column-gap: 12px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--color-accent_2);
+}
+.cart__list-item-quantity {
+  color: var(--color-accent-light);
+  font-weight: 700;
+}
+.cart__list-item-prices {
+  display: flex;
+  -moz-column-gap: 7px;
+       column-gap: 7px;
+}
+.cart__list-item-price {
+  opacity: 0.75;
+  font-weight: 500;
+}
+.cart__list-item-totalPrice {
+  font-weight: 600;
+}
+.cart__list-item-remove-button {
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  position: relative;
+  border: 1px solid var(--color-accent);
+  width: 18px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  margin-left: auto;
+  cursor: pointer;
+}
+.cart__list-item-remove-button-image {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.cart__list-item-image-empty, .cart__list-item-empty {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.cart__footer {
+  display: flex;
+  font-size: 14px;
+  flex-direction: column;
+  row-gap: 20px;
+}
+.cart__footer-totalPrice {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 30px;
+}
+.cart__footer-totalPrice-text {
+  opacity: 0.8;
+}
+.cart__footer-totalPrice-value {
+  font-size: 26px;
+  font-weight: 700;
+}
+.cart__footer-ecology {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: center;
+  padding-inline: 30px;
+  padding-block: 15px;
+  border-radius: 12px;
+  background-color: var(--color-bg);
+  -moz-column-gap: 10px;
+       column-gap: 10px;
+}
+.cart__footer-confirmOrder {
+  display: flex;
+  width: 100%;
+  background-color: var(--color-accent-light);
+  color: white;
+  padding-inline: 60px;
+  padding-block: 10px;
+}
+@media (hover: hover) {
+  .cart__footer-confirmOrder:hover {
+    background-color: hsl(11, 99%, 64%);
+  }
+}
+@media (hover: none) {
+  .cart__footer-confirmOrder:active {
+    background-color: hsl(11, 99%, 64%);
+  }
 }
 
 .dessert__list {

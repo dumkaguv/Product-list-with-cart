@@ -1,10 +1,9 @@
 import { Menu } from "./menu.js";
 import { ScreenController } from "./screenController.js";
+import { Cart } from "./cart.js";
 
 const menu = new Menu();
-const screenController = new ScreenController(menu);
+const cart = new Cart();
+const screenController = new ScreenController(menu, cart);
 
-menu.addItems().then(() => {
-  screenController.renderMenu();
-});
 screenController.init();
