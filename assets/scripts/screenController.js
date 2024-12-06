@@ -18,6 +18,13 @@ export class ScreenController {
 
   initEvents() {
     const menuListUl = document.querySelector(".dessert__list");
+    const cart = document.querySelector(".cart");
+
+    cart.addEventListener(
+      "click",
+      (event) => this.deleteItemFromCart(event),
+      true
+    );
 
     menuListUl.addEventListener(
       "mouseenter",
@@ -78,13 +85,25 @@ export class ScreenController {
     itemImage.style.border = "3px solid var(--color-accent-light)";
   }
 
-  handleMouseLeave(cartButton) {
+  handleMouseLeave(cartButton, isCalledToRemoveStyles = false) {
     if (
+      !isCalledToRemoveStyles &&
       cartButton?.querySelector(".current-quantity")?.textContent > "0"
     ) {
       return;
     }
-    const itemImage = cartButton?.previousElementSibling;
+    let itemImage = null;
+    if (!isCalledToRemoveStyles) {
+      itemImage = cartButton?.previousElementSibling;
+    } else if (isCalledToRemoveStyles) {
+      const menuItems = document.querySelectorAll(".dessert__list-item");
+      for (const item of menuItems) {
+        if (parseInt(item.dataset.itemId) === cartButton) {
+          cartButton = item.querySelector(".dessert__list-item-buy");
+          itemImage = cartButton?.previousElementSibling;
+        }
+      }
+    }
 
     cartButton.innerHTML = this.initialButtonContentHTML;
     cartButton.style.justifyContent = "center";
@@ -154,7 +173,7 @@ export class ScreenController {
 
   getItemTemplate(category, name, price, pathToImage, index) {
     return `
-      <li class="dessert__list-item">
+      <li class="dessert__list-item" data-item-id="${index}">
         <div class="dessert__list-item-wrapper">
           <img class="dessert__list-item-image" src="${pathToImage}" alt="${name}" loading="lazy" />
           <button class="dessert__list-item-buy button button-to-cart" data-item-id="${index}" tabindex="0">
@@ -180,6 +199,7 @@ export class ScreenController {
 
   renderCartItems(cartDiv) {
     const cartList = cartDiv.querySelector(".cart__list");
+    const cartFooter = cartDiv.querySelector(".cart__footer");
 
     if (!this.initialCartContentHTML) {
       this.initialCartContentHTML = cartList.innerHTML;
@@ -192,6 +212,7 @@ export class ScreenController {
 
     if (this.cart.isCartEmpty()) {
       cartList.innerHTML = this.initialCartContentHTML;
+      cartFooter?.remove();
     } else if (!this.cart.isCartEmpty()) {
       cartList?.querySelector(".cart__list-item-empty")?.remove();
 
@@ -229,6 +250,8 @@ export class ScreenController {
           }
         }
       }
+      this.renderFooterCart(cartDiv, cartList);
+      this.renderOrderTotalPrice();
     }
     if (browserIndexesSet.size !== actualIndexesSet.size) {
       for (const itemLi of itemsLi) {
@@ -245,6 +268,28 @@ export class ScreenController {
     countDiv.innerHTML = `Your Cart (${this.cart.getTotalItemsInCart()})`;
   }
 
+  renderFooterCart(cartDiv, cartList) {
+    const isFooterNext =
+      cartList?.nextElementSibling?.classList?.contains("cart__footer");
+    if (!isFooterNext) {
+      cartDiv.insertAdjacentHTML(
+        "beforeend",
+        this.getFooterCartTemplate()
+      );
+    }
+  }
+
+  renderOrderTotalPrice() {
+    const orderTotalPriceDiv = document.querySelector(
+      ".cart__footer-totalPrice-value"
+    );
+    if (orderTotalPriceDiv) {
+      orderTotalPriceDiv.textContent = `$ ${this.cart
+        .getTotalPrice()
+        .toFixed(2)}`;
+    }
+  }
+
   isAlreadyInCart(itemsLi, index) {
     for (const itemLi of itemsLi) {
       if (parseInt(itemLi?.dataset?.id) === index) {
@@ -254,9 +299,42 @@ export class ScreenController {
     return false;
   }
 
+  deleteItemFromCart(event) {
+    const deleteButton = event?.target;
+    const items = this.cart.getItemsInCart();
+    const menuItems = document.querySelectorAll(
+      ".dessert__list .dessert__list-item"
+    );
+
+    if (
+      deleteButton?.matches(
+        ".cart__list-item-remove-button, .cart__list-item-remove-button-image"
+      )
+    ) {
+      const itemInCartBrowser = deleteButton.closest(".cart__list-item");
+      const indexBrowser = +itemInCartBrowser.dataset.id;
+
+      for (const [item] of items) {
+        if (item.index === indexBrowser) {
+          this.cart.changeQuantity(item, 0);
+        }
+      }
+
+      for (const item of menuItems) {
+        if (parseInt(item.dataset.itemId) === indexBrowser) {
+          this.handleMouseLeave(indexBrowser, true);
+          break;
+        }
+      }
+
+      itemInCartBrowser.remove();
+      this.renderCart();
+    }
+  }
+
   getItemCartTemplate(name, quantity, price, totalPrice, index) {
     return `
-      <li class="cart__list-item" data-id="${index}">
+      <li class="cart__list-item" data-id="${index}" tabindex="0">
         <div class="cart__list-item-title">${name}</div>
         <div class="cart__list-item-info">
           <div class="cart__list-item-quantity">${quantity}x</div>
@@ -267,6 +345,7 @@ export class ScreenController {
           <button
             type="button"
             class="cart__list-item-remove-button"
+            tabindex="0"
           >
             <img
               src="./assets/images/icon-remove-item.svg"
@@ -278,27 +357,29 @@ export class ScreenController {
       </li>
     `;
   }
-}
 
-/*
-          <div class="cart__footer">
-            <div class="cart__footer-totalPrice">
-              <div class="cart__footer-totalPrice-text">Order Total</div>
-              <div class="cart__footer-totalPrice-value">$5.50</div>
-            </div>
-            <div class="cart__footer-ecology">
-              <img
-                src="./assets/images/icon-carbon-neutral.svg"
-                class="cart__footer-ecology-icon"
-                alt="carbon neutral delivery icon"
-              />
-              <div class="cart__footer-ecology-text">
-                This is a&nbsp;<b>carbon-neutral</b>&nbsp;delivery
-              </div>
-            </div>
-            <button type="button" class="cart__footer-confirmOrder button">
-              Confirm Order
-            </button>
+  getFooterCartTemplate() {
+    return `
+      <div class="cart__footer">
+        <div class="cart__footer-totalPrice">
+          <div class="cart__footer-totalPrice-text">Order Total</div>
+          <div class="cart__footer-totalPrice-value">$5.50</div>
+        </div>
+        <div class="cart__footer-ecology">
+          <img
+            src="./assets/images/icon-carbon-neutral.svg"
+            class="cart__footer-ecology-icon"
+            alt="carbon neutral delivery icon"
+          />
+          <div class="cart__footer-ecology-text">
+            This is a&nbsp;<b>carbon-neutral</b>&nbsp;delivery
           </div>
         </div>
-*/
+        <button type="button" class="cart__footer-confirmOrder button" tabindex="0">
+          Confirm Order
+        </button>
+        </div>
+      </div>
+    `;
+  }
+}
