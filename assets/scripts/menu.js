@@ -17,7 +17,7 @@ export class Menu {
       return this.items;
     }
 
-    return fetch("../../data.json")
+    return fetch("./data.json")
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
