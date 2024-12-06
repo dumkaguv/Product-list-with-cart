@@ -8,7 +8,7 @@
   width: 100%;
   max-width: fluid-common($min-width-cart, $max-width-cart);
 
-  position: absolute;
+  position: fixed;
   right: var(--container-padding-x);
 
   background-color: white;

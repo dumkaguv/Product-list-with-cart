@@ -19,12 +19,7 @@ export class ScreenController {
   initEvents() {
     const menuListUl = document.querySelector(".dessert__list");
     const cart = document.querySelector(".cart");
-
-    cart.addEventListener(
-      "click",
-      (event) => this.deleteItemFromCart(event),
-      true
-    );
+    const modal = document.getElementById("confirmOrder");
 
     menuListUl.addEventListener(
       "mouseenter",
@@ -54,6 +49,24 @@ export class ScreenController {
       },
       true
     );
+
+    cart.addEventListener(
+      "click",
+      (event) => this.deleteItemFromCart(event),
+      true
+    );
+
+    cart.addEventListener(
+      "click",
+      (event) => this.verifyIsModalConfirmation(event),
+      true
+    );
+
+    modal.addEventListener(
+      "click",
+      (event) => this.closeModal(modal, event),
+      true
+    );
   }
 
   toggleButtonContent(event, action) {
@@ -62,17 +75,42 @@ export class ScreenController {
     // target === cartButton
     if (target?.classList?.contains("dessert__list-item-buy")) {
       if (action === "mouseenter") {
-        this.handleMouseEnter(target);
+        this.handleMouseEnter(event, target);
       } else if (action === "mouseleave") {
         this.handleMouseLeave(target);
       }
     }
   }
 
-  handleMouseEnter(cartButton) {
+  verifyIsModalConfirmation(event) {
+    const isConfirmOrderButton = event?.target?.classList?.contains(
+      "cart__footer-confirmOrder"
+    );
+    if (isConfirmOrderButton) {
+      const confirmationModal = document.getElementById("confirmOrder");
+      if (confirmationModal.style.display !== "block") {
+        this.showModal(confirmationModal);
+      }
+    }
+  }
+
+  showModal(modalId) {
+    modalId.style.display = "block";
+  }
+
+  closeModal(modalId, event) {
+    const isClickOutsideModalContent =
+      event?.target?.classList?.contains("confirm-order");
+    if (isClickOutsideModalContent) {
+      modalId.style.display = "none";
+    }
+  }
+
+  handleMouseEnter(event, cartButton) {
     if (!this.initialButtonContentHTML) {
       this.initialButtonContentHTML = cartButton.innerHTML;
     }
+
     const currentQuantity =
       cartButton?.querySelector(".current-quantity")?.textContent || 0;
     const itemImage = cartButton?.previousElementSibling;
@@ -120,6 +158,15 @@ export class ScreenController {
     `;
   }
 
+  /**
+   * Handles mouse click events on quantity increment/decrement buttons.
+   *
+   * @param {Event} event - The mouse click event object.
+   *
+   * This function identifies whether the clicked element is an increment or
+   * decrement button. It updates the quantity of the corresponding item in the
+   * cart, adjusts the displayed current quantity, and re-renders the cart contents.
+   */
   handleMouseClick(event) {
     const buttonQuantity = event?.target;
     const itemId = +buttonQuantity?.parentElement?.dataset?.itemId;

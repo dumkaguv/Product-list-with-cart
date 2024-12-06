@@ -1,0 +1,38 @@
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+
+  width: 100%;
+  height: 100%;
+
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  position: absolute; /* Абсолютное позиционирование относительно модального окна */
+  top: 50%; /* Центрируем по вертикали */
+  left: 50%; /* Центрируем по горизонтали */
+  transform: translate(-50%, -50%); /* Смещаем на 50% ширины и высоты */
+  width: 30%; /* Ширина модального окна */
+  max-width: 500px; /* Максимальная ширина */
+  max-height: 80%; /* Ограничиваем максимальную высоту */
+  overflow-y: auto; /* Добавляем прокрутку, если контент превышает высоту */
+  background-color: white;
+  padding: 25px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Тень */
+  border-radius: 10px; /* Скругленные углы */
+  animation: animate 0.3s; /* Анимация появления */
+}
+
+@keyframes animate {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
