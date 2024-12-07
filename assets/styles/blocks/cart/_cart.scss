@@ -7,7 +7,8 @@
   justify-self: flex-end;
   width: 100%;
   max-width: fluid-common($min-width-cart, $max-width-cart);
-
+  overflow: auto;
+  max-height: calc(100dvh - 150px);
   position: fixed;
   right: var(--container-padding-x);
 
@@ -15,6 +16,14 @@
   border-radius: var(--border-radius);
   padding-inline: 20px;
   padding-block: 25px;
+
+  @include mobile-medium() {
+    right: 0;
+    display: flex;
+    position: relative;
+    margin-top: 30px;
+    max-width: 100%;
+  }
 
   &__title {
     margin-bottom: 25px;

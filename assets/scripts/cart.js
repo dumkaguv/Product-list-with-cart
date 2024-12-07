@@ -38,4 +38,10 @@ export class Cart {
   getTotalPrice() {
     return this.totalPrice;
   }
+
+  clearCart() {
+    this.cart.clear();
+    this.totalItems = 0;
+    this.totalPrice = 0;
+  }
 }

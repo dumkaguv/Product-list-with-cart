@@ -41,6 +41,36 @@
       bottom: -7%;
       translate: -50%;
       z-index: 1;
+
+      @include tablet() {
+        width: 70%;
+        height: 25%;
+        font-size: 14px;
+      }
+
+      @include mobile-s() {
+        height: 48px;
+      }
     }
+  }
+
+  @include desktop() {
+    grid-template-columns: repeat(2, fluid-common(170, 350, 1280));
+  }
+
+  @include tablet() {
+    grid-template-columns: repeat(2, fluid-common(100, 250, 1142));
+  }
+
+  @include mobile() {
+    grid-template-columns: repeat(1, fluid-common(150, 250, 768));
+  }
+
+  @include mobile-medium() {
+    grid-template-columns: repeat(2, fluid-common(150, 250, 640));
+  }
+
+  @include mobile-s() {
+    grid-template-columns: repeat(1, fluid-common(100, 340, 500));
   }
 }

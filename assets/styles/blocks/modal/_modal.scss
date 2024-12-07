@@ -13,19 +13,27 @@
 }
 
 .modal-content {
-  position: absolute; /* Абсолютное позиционирование относительно модального окна */
-  top: 50%; /* Центрируем по вертикали */
-  left: 50%; /* Центрируем по горизонтали */
-  transform: translate(-50%, -50%); /* Смещаем на 50% ширины и высоты */
-  width: 30%; /* Ширина модального окна */
-  max-width: 500px; /* Максимальная ширина */
-  max-height: 80%; /* Ограничиваем максимальную высоту */
-  overflow-y: auto; /* Добавляем прокрутку, если контент превышает высоту */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 35%;
+  width: 520px;
+  max-height: 80%;
+  overflow-y: auto;
   background-color: white;
   padding: 25px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Тень */
-  border-radius: 10px; /* Скругленные углы */
-  animation: animate 0.3s; /* Анимация появления */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  animation: animate 0.3s;
+
+  @include desktop() {
+    width: fluid-common(300, 520, 1280);
+  }
+
+  @include mobile-medium() {
+    width: 90%;
+  }
 }
 
 @keyframes animate {

@@ -4,6 +4,7 @@ export class ScreenController {
     this.cart = cart;
     this.initialButtonContentHTML = "";
     this.initialCartContentHTML = "";
+    this.isCartMoved = false;
   }
 
   init() {
@@ -67,6 +68,14 @@ export class ScreenController {
       (event) => this.closeModal(modal, event),
       true
     );
+
+    modal.addEventListener(
+      "click",
+      (event) => this.startNewOrder(modal, event),
+      true
+    );
+
+    window.addEventListener('resize', this.moveCart);
   }
 
   toggleButtonContent(event, action) {
@@ -79,30 +88,6 @@ export class ScreenController {
       } else if (action === "mouseleave") {
         this.handleMouseLeave(target);
       }
-    }
-  }
-
-  verifyIsModalConfirmation(event) {
-    const isConfirmOrderButton = event?.target?.classList?.contains(
-      "cart__footer-confirmOrder"
-    );
-    if (isConfirmOrderButton) {
-      const confirmationModal = document.getElementById("confirmOrder");
-      if (confirmationModal.style.display !== "block") {
-        this.showModal(confirmationModal);
-      }
-    }
-  }
-
-  showModal(modalId) {
-    modalId.style.display = "block";
-  }
-
-  closeModal(modalId, event) {
-    const isClickOutsideModalContent =
-      event?.target?.classList?.contains("confirm-order");
-    if (isClickOutsideModalContent) {
-      modalId.style.display = "none";
     }
   }
 
@@ -158,15 +143,6 @@ export class ScreenController {
     `;
   }
 
-  /**
-   * Handles mouse click events on quantity increment/decrement buttons.
-   *
-   * @param {Event} event - The mouse click event object.
-   *
-   * This function identifies whether the clicked element is an increment or
-   * decrement button. It updates the quantity of the corresponding item in the
-   * cart, adjusts the displayed current quantity, and re-renders the cart contents.
-   */
   handleMouseClick(event) {
     const buttonQuantity = event?.target;
     const itemId = +buttonQuantity?.parentElement?.dataset?.itemId;
@@ -379,6 +355,92 @@ export class ScreenController {
     }
   }
 
+  verifyIsModalConfirmation(event) {
+    const isConfirmOrderButton = event?.target?.classList?.contains(
+      "cart__footer-confirmOrder"
+    );
+    if (isConfirmOrderButton) {
+      const confirmationModal = document.getElementById("confirmOrder");
+      if (confirmationModal.style.display !== "block") {
+        this.showModal(confirmationModal);
+      }
+    }
+  }
+
+  showModal(modalId) {
+    modalId.style.display = "block";
+    this.renderModalContent();
+  }
+
+  closeModal(modalId, event) {
+    const isClickOutsideModalContent =
+      event?.target?.classList?.contains("confirm-order");
+    if (
+      isClickOutsideModalContent ||
+      event?.target?.classList?.contains("modal-button-start-new-order")
+    ) {
+      modalId.style.display = "none";
+    }
+  }
+
+  renderModalContent() {
+    const itemsToRender = this.cart.getItemsInCart();
+    const modalList = document.querySelector(".confirm-order .modal-list");
+    modalList.innerHTML = "";
+
+    for (const [item, quantity] of itemsToRender) {
+      const { category, image, index, name, price } = item;
+      const pathToImage = image.thumbnail;
+
+      modalList.insertAdjacentHTML(
+        "beforeend",
+        this.getOrderItemTemplate(
+          name,
+          quantity,
+          price,
+          price * quantity,
+          pathToImage
+        )
+      );
+    }
+
+    const totalPrice = this.cart.getTotalPrice();
+    modalList.insertAdjacentHTML(
+      "beforeend",
+      this.getOrderTotalPriceTemplate(totalPrice)
+    );
+  }
+
+  startNewOrder(modal, event) {
+    const menu = document.querySelector(".dessert__list");
+
+    if (
+      event?.target?.classList?.contains("modal-button-start-new-order")
+    ) {
+      this.closeModal(modal, event);
+      this.cart.clearCart();
+      this.renderCart();
+      menu.innerHTML = "";
+      this.renderMenu();
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    }
+  }
+
+  moveCart() {
+    const screenWidth = window.innerWidth;
+    const cart = document.querySelector(".cart");
+    const sectionMenu = document.querySelector(".desserts");
+  
+    if (screenWidth <= 640 && !this.isCartMoved) {
+      sectionMenu.insertAdjacentElement("beforeend", cart);
+      this.isCartMoved = true;
+    } else if (screenWidth > 640 && this.isCartMoved) {
+      sectionMenu.insertAdjacentElement("beforebegin", cart);
+      this.isCartMoved = false;
+    }
+  }
+
   getItemCartTemplate(name, quantity, price, totalPrice, index) {
     return `
       <li class="cart__list-item" data-id="${index}" tabindex="0">
@@ -426,6 +488,39 @@ export class ScreenController {
           Confirm Order
         </button>
         </div>
+      </div>
+    `;
+  }
+
+  getOrderItemTemplate(name, quantity, price, totalPrice, pathToImage) {
+    return `
+      <li class="modal-list-item">
+        <img
+          src="${pathToImage}"
+          class="modal-list-item-image"
+          alt="${name}"
+          width="50"
+          height="50"
+        />
+        <div class="modal-item-info">
+          <div class="modal-item-name">${name}</div>
+          <div class="modal-item-order-info">
+            <div class="modal-item-quantity">${quantity}x</div>
+            <div class="modal-item-price">@ $${price.toFixed(2)}</div>
+          </div>
+        </div>
+        <div class="modal-item-total-price">$${totalPrice.toFixed(2)}</div>
+      </li>
+    `;
+  }
+
+  getOrderTotalPriceTemplate(totalPrice) {
+    return `
+      <div class="modal-total-price">
+        <div class="modal-total-price-text">Order Total</div>
+        <div class="modal-total-price-value">$${totalPrice.toFixed(
+          2
+        )}</div>
       </div>
     `;
   }
