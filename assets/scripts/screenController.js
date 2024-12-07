@@ -14,7 +14,7 @@ export class ScreenController {
       this.renderMenu();
     });
 
-    // this.renderCart();
+    this.moveCart();
   }
 
   initEvents() {
